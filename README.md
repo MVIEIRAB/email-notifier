@@ -1,5 +1,8 @@
 # email-notifier
-Projeto com intuito de aprendizado pessoal
+Serviço de envio de e-mail && notificador de disponibilidade de produtos (diversos)
 
+Ferramentas que irei utilizar que compões este serviço:
 
-- Serviço de envio de e-mail && notificador de disponibilidade de produtos (diversos)
+- AWS: SNS
+- AWS: SES
+- RabbitMQ
