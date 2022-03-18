@@ -4,9 +4,10 @@ import { HttpModule } from '@nestjs/axios';
 import { AppService, UserService } from './service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from 'src/entity/user.entity';
+import { Code } from 'src/entity/code.entity';
 
 const SERVICES = [AppService, UserService];
-const REPOSITORIES = [User];
+const REPOSITORIES = [User, Code];
 
 @Module({
   imports: [
