@@ -6,4 +6,16 @@ services:
       context: .
       dockerfile: Dockerfile
     ports:
-      - 3000:3000
+      - 3333:3000
+  rabbitmq:
+    container_name: 'rabbitmq'
+    image: rabbitmq:3-management
+    hostname: 'rabbitmq'
+    environment:
+      - RABBITMQ_DEFAULT_USER=myuser
+      - RABBITMQ_DEFAULT_PASS=mypassword
+    ports:
+      # AMQP
+      - '5672:5672'
+      # HTTP UI
+      - '15672:15672'
