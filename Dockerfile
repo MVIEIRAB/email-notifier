@@ -11,5 +11,4 @@ COPY package.json /app/package.json
 COPY yarn.lock /app/yarn.lock
 COPY .env /app/
 RUN yarn install --production=true
-CMD ls
-CMD node src/main.js
+CMD node main.js
