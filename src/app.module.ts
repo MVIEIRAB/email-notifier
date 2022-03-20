@@ -4,24 +4,31 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ApplicationModule } from './application/application.module';
 import { AwsSdkModule } from 'nest-aws-sdk';
 import { SES, SNS } from 'aws-sdk';
+import { ConfigModule } from '@nestjs/config';
 
 const controllers = [AppController, UserController];
 const providers = [];
 
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      envFilePath: ['.env'],
+      isGlobal: true,
+    }),
     TypeOrmModule.forRoot({
       type: 'sqlite',
-      database: 'db./project_database.db',
+      database: process.env.SQLITE_DB ?? ':memory:',
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
       synchronize: true,
     }),
     AwsSdkModule.forRoot({
       defaultServiceOptions: {
-        region: 'us-east-1',
+        region: process.env.AWS_DEFAULT_REGION ?? 'us-east-1',
         credentials: {
-          accessKeyId: process.env.AWS_ACCESS_KEY_ID ?? 'any',
-          secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY ?? 'any',
+          accessKeyId: process.env.AWS_ACCESS_KEY_ID ?? 'AKIAT4ECCOGNXGKZPTPY',
+          secretAccessKey:
+            process.env.AWS_SECRET_ACCESS_KEY ??
+            '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',
         },
       },
       services: [SES, SNS],

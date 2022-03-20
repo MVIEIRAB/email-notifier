@@ -4,6 +4,7 @@ import { InjectAwsService } from 'nest-aws-sdk';
 import { User } from 'src/entity/user.entity';
 import { Repository } from 'typeorm';
 import { SES, SNS } from 'aws-sdk';
+import { sendEmail } from '../../utils/emailSend.utils';
 
 @Injectable()
 export class UserService {
@@ -19,6 +20,18 @@ export class UserService {
   ) {}
 
   async create(user: any = {}): Promise<User> {
+    const makeEmailSendParams = sendEmail(
+      'mavb.financas@gmail.com',
+      'Cadastro de Usuário',
+      'Olá, você foi cadastrado com sucesso! \n\nAcesse o link: http://localhost:3000/auth/confirm/',
+    );
+
+    await this.ses
+      .sendEmail(makeEmailSendParams)
+      .promise()
+      .then()
+      .catch((err) => console.error(err));
+
     return this.usersRepository.save(user);
   }
 
