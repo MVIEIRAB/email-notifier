@@ -1,11 +1,14 @@
-FROM node:16
-WORKDIR /usr/src/app
+FROM node:14-alpine as builder
+WORKDIR /app
+COPY . /app
+RUN yarn install
+RUN yarn build
 
-COPY package.json .
-COPY yarn.lock .
-
-RUN yarn install --frozen-lockfile
-
-EXPOSE 3000
-CMD ["ls", "-la"]
-CMD ["yarn", "start"]
+FROM node:14-alpine
+WORKDIR /app
+COPY --from=builder /app/dist /app
+COPY package.json /app/package.json
+COPY yarn.lock /app/yarn.lock
+COPY .env /app/
+RUN yarn install --production=true
+CMD node src/main.js

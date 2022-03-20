@@ -25,8 +25,9 @@ const providers = [];
       defaultServiceOptions: {
         region: process.env.AWS_DEFAULT_REGION ?? 'us-east-1',
         credentials: {
-          accessKeyId: process.env.AWS_ACCESS_KEY_ID ?? '',
-          secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY ?? '',
+          accessKeyId: process.env.AWS_ACCESS_KEY_ID ?? 'anything',
+          secretAccessKey:
+            process.env.AWS_SECRET_ACCESS_KEY ?? 'any-secret-key',
         },
       },
       services: [SES, SNS],
