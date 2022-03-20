@@ -4,9 +4,8 @@ WORKDIR /usr/src/app
 COPY package.json .
 COPY yarn.lock .
 
-RUN yarn install
-RUN yarn build
+RUN yarn install --frozen-lockfile
 
-COPY dist .
 EXPOSE 3000
-CMD ["yarn", "start:prod"]
+CMD ["ls", "-la"]
+CMD ["yarn", "start"]
