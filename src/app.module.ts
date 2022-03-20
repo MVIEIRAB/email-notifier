@@ -17,15 +17,15 @@ const providers = [];
     }),
     TypeOrmModule.forRoot({
       type: 'sqlite',
-      database: process.env.SQLITE_DB ?? ':memory:',
+      database: process.env.SQLITE_DB ?? './db/project_database.db',
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
       synchronize: true,
     }),
     AwsSdkModule.forRoot({
       defaultServiceOptions: {
-        region: process.env.AWS_DEFAULT_REGION ?? 'us-east-1',
+        region: process.env.AWS_DEFAULT_REGION ?? 'sa-east-1',
         credentials: {
-          accessKeyId: process.env.AWS_ACCESS_KEY_ID ?? 'anything',
+          accessKeyId: process.env.AWS_ACCESS_KEY_ID ?? 'any-access-key-id',
           secretAccessKey:
             process.env.AWS_SECRET_ACCESS_KEY ?? 'any-secret-key',
         },
