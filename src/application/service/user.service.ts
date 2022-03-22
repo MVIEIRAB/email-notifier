@@ -6,6 +6,14 @@ import { sendEmail } from '../../utils/emailSend.utils';
 
 import { RabbitMqServer } from '../infraestructure';
 
+interface IUser {
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+  id: number;
+}
+
 @Injectable()
 export class UserService {
   private rabbitConnection: RabbitMqServer;
@@ -20,19 +28,41 @@ export class UserService {
   }
 
   async create(user: any = {}): Promise<User> {
-    const makeEmailSendParams = sendEmail(
-      user?.email as string,
-      'Cadastro de Usuário',
-      'Olá, você foi cadastrado com sucesso! \n\nAcesse o link: http://localhost:3000/auth/confirm/',
-    );
+    try {
+      const response: IUser = await this.usersRepository.save(user);
 
-    await this.rabbitConnection.start();
-    await this.rabbitConnection.pubToQueue(
-      'userCreation',
-      JSON.stringify({ type: 'email', payload: makeEmailSendParams }),
-    );
+      const makeEmailSendParams = sendEmail(
+        response.email,
+        'Cadastro de Usuário',
+        'Olá, você foi cadastrado com sucesso! \n\nAcesse o link: http://localhost:3000/auth/confirm/',
+      );
 
-    return this.usersRepository.save(user);
+      await this.rabbitConnection.start();
+      await this.rabbitConnection.pubToQueue(
+        'userCreation',
+        JSON.stringify({ type: 'email', payload: makeEmailSendParams }),
+      );
+
+      return response;
+    } catch (error) {
+      return error;
+    }
+  }
+
+  async sendVerificationCode() {
+    try {
+      // implement sms send with code
+    } catch (error) {
+      return error;
+    }
+  }
+
+  async setPassword() {
+    try {
+      // implement password set with verified code
+    } catch (error) {
+      return error;
+    }
   }
 
   async list(): Promise<User[]> {
