@@ -1,36 +1,36 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { InjectAwsService } from 'nest-aws-sdk';
 import { User } from 'src/entity/user.entity';
 import { Repository } from 'typeorm';
-import { SES, SNS } from 'aws-sdk';
 import { sendEmail } from '../../utils/emailSend.utils';
+
+import { RabbitMqServer } from '../infraestructure';
 
 @Injectable()
 export class UserService {
+  private rabbitConnection: RabbitMqServer;
+
   constructor(
     @InjectRepository(User)
     private readonly usersRepository: Repository<User>,
-
-    @InjectAwsService(SES)
-    private readonly ses: SES,
-
-    @InjectAwsService(SNS)
-    private readonly sns: SNS,
-  ) {}
+  ) {
+    this.rabbitConnection = new RabbitMqServer(
+      'amqp://myuser:mypassword@0.0.0.0:5672',
+    );
+  }
 
   async create(user: any = {}): Promise<User> {
     const makeEmailSendParams = sendEmail(
-      'mavb.financas@gmail.com',
+      user?.email as string,
       'Cadastro de Usuário',
       'Olá, você foi cadastrado com sucesso! \n\nAcesse o link: http://localhost:3000/auth/confirm/',
     );
 
-    await this.ses
-      .sendEmail(makeEmailSendParams)
-      .promise()
-      .then()
-      .catch((err) => console.error(err));
+    await this.rabbitConnection.start();
+    await this.rabbitConnection.pubToQueue(
+      'userCreation',
+      JSON.stringify({ type: 'email', payload: makeEmailSendParams }),
+    );
 
     return this.usersRepository.save(user);
   }
