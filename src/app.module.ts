@@ -3,7 +3,7 @@ import { AppController, UserController } from './controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ApplicationModule } from './application/application.module';
 import { AwsSdkModule } from 'nest-aws-sdk';
-import { SES, SNS } from 'aws-sdk';
+import { SES } from 'aws-sdk';
 import { ConfigModule } from '@nestjs/config';
 
 const controllers = [AppController, UserController];
@@ -30,7 +30,7 @@ const providers = [];
             process.env.AWS_SECRET_ACCESS_KEY ?? 'any-secret-key',
         },
       },
-      services: [SES, SNS],
+      services: [SES],
     }),
     ApplicationModule,
   ],

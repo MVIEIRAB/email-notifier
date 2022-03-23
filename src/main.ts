@@ -4,7 +4,7 @@ import { AppModule } from './app.module';
 
 import { RabbitMqServer } from './application/infraestructure/rabbit-mq-server';
 
-import { SES, SNS } from 'aws-sdk';
+import { SES } from 'aws-sdk';
 import { AwsService } from './application/service/aws.service';
 
 async function bootstrap() {
@@ -25,10 +25,11 @@ async function bootstrap() {
     };
 
     const ses = new SES({ apiVersion: '2010-12-01', ...config });
-    const sns = new SNS({ apiVersion: '2010-12-01', ...config });
 
-    const awsService = new AwsService(ses, sns);
-    await awsService.exec(JSON.parse(message.content.toString()));
+    const awsService = new AwsService(ses);
+    await awsService
+      .exec(JSON.parse(message.content.toString()))
+      .catch((err) => console.log(err));
   });
 
   await app.listen(3000);

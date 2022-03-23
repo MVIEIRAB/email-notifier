@@ -5,6 +5,9 @@ export class Code {
   @PrimaryGeneratedColumn()
   id: number;
 
+  @Column()
+  code: string;
+
   @Column({ nullable: false })
   userId: number;
 

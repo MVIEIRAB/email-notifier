@@ -6,7 +6,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from 'src/entity/user.entity';
 import { Code } from 'src/entity/code.entity';
 import { AwsSdkModule } from 'nest-aws-sdk';
-import { SES, SNS } from 'aws-sdk';
+import { SES } from 'aws-sdk';
 
 const SERVICES = [AppService, UserService, AwsService];
 const REPOSITORIES = [User, Code];
@@ -15,7 +15,7 @@ const REPOSITORIES = [User, Code];
   imports: [
     HttpModule.register({ timeout: 60000 }),
     TypeOrmModule.forFeature([...REPOSITORIES]),
-    AwsSdkModule.forFeatures([SES, SNS]),
+    AwsSdkModule.forFeatures([SES]),
   ],
   providers: [...SERVICES],
   exports: [...SERVICES],
